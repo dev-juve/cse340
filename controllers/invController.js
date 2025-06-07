@@ -33,7 +33,7 @@ async function buildByInvId(req, res, next) {
 
   const html = await utilities.buildVehicleDetail(vehicle)
 
-  res.render("./inventory/vehicledetails", {
+  res.render("./inventory/vehicleDetails", {
     title: `${vehicle.inv_make} ${vehicle.inv_model}`,
     nav,
     html,
