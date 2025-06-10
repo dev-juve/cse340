@@ -1,5 +1,13 @@
  <div id="welcome">
       <h2>Welcome to CSE Motors!</h2>
+      <% if (messages.notice) { %>
+      <ul class="flash-messages">
+        <% messages.notice.forEach(function(msg) { %>
+          <li><%= msg %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+
       <div id="delorean-car">
         <h4>DMC Delorean</h4>
         <p>3 Cup holders</p>
