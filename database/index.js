@@ -40,7 +40,7 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === "development";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
