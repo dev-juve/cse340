@@ -1,7 +1,8 @@
-const utilities = require(".")
+const utilities = require("../utilities")
 const { body, validationResult } = require("express-validator")
 const validate = {}
 const accountModel = require("../models/account-model")
+const { buildAddClassification } = require("../controllers/invController")
 
 /*  **********************************
   *  Registration Data Validation Rules
@@ -113,6 +114,49 @@ const checkLoginData = async (req, res, next) => {
   }
 }
 
+const inventoryRules = () => {
+  return [
+    body("classification_id").notEmpty().isNumeric().withMessage("Select a classification."),
+    body("inv_make").trim().notEmpty().withMessage("Make is required."),
+    body("inv_model").trim().notEmpty().withMessage("Model is required."),
+    body("inv_description").trim().notEmpty().withMessage("Description is required."),
+    body("inv_image").trim().notEmpty().withMessage("Image path is required."),
+    body("inv_thumbnail").trim().notEmpty().withMessage("Thumbnail path is required."),
+    body("inv_price").notEmpty().isFloat({ min: 0 }).withMessage("Valid price required."),
+    body("inv_year").notEmpty().isInt({ min: 1900 }).withMessage("Valid year required."),
+    body("inv_miles").notEmpty().isInt({ min: 0 }).withMessage("Valid miles required."),
+    body("inv_color").trim().notEmpty().withMessage("Color is required.")
+  ]
+}
+
+const checkInventoryData = async (req, res, next) => {
+  const { classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body;
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    let classificationList = await utilities.buildClassificationList(classification_id); // ← This must be here
+    res.render("inventory/add-inventory", {
+      title: "Add New Inventory",
+      errors: errors.array(),
+      nav,
+      classificationList,
+      classification_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color
+    });
+    return;
+  }
+  next();
+}
+
 
 
 module.exports = {
@@ -120,6 +164,8 @@ module.exports = {
   loginRules,
   checkRegData: validate.checkRegData,
   checkLoginData,
+  inventoryRules,
+  checkInventoryData
 }
 
 
