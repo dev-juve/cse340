@@ -17,6 +17,7 @@ const utilities = require("./utilities")
 const session = require("express-session")
 const pool = require('./database/')
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 
 
 
@@ -44,10 +45,13 @@ app.use((req, res, next) => {
   res.locals.messages = req.flash("notice")
   next()
 })
-
 // Body Parser Middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+// Cookie-Parser Middleware
+app.use(cookieParser())
+// JWTToken Middleware
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates

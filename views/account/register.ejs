@@ -18,7 +18,7 @@
     <input type="text" name="account_lastname" id="accountLastname" required value="<%= locals.account_lastname %>">
 
     <label for="account_email">Email</label>
-    <input type="email" name="account_email" id="accountEmail" required value="<%= locals.account_email %>">
+    <input type="email" name="account_email" id="accountEmail" required value="<%= typeof account_email !== 'undefined' ? account_email : '' %>">
 
     <label for="account_password">Password</label>
   <div class="password-instructions">

@@ -1,7 +1,8 @@
 const utilities = require("../utilities")
 const accountModel = require("../models/account-model")
 const bcrypt = require("bcryptjs")
-
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 /* ****************************************
 *  Deliver login view
@@ -11,6 +12,8 @@ async function buildLogin(req, res, next) {
   res.render("account/login", {
     title: "Login",
     nav,
+    errors: [],
+    account_email: "" // for sticky
   })
 }
 
@@ -70,9 +73,59 @@ async function registerAccount(req, res) {
   }
 }
 
+/* ****************************************
+ *  Process login request
+ * ************************************ */
+async function accountLogin(req, res) {
+  let nav = await utilities.getNav()
+  const { account_email, account_password } = req.body
+
+  const accountData = await accountModel.getAccountByEmail(account_email)
+
+  if (!accountData) {
+    return res.render("account/login", {
+      title: "Login",
+      nav,
+      errors: [{ msg: "No account found for that email." }],
+      account_email
+    })
+  }
+
+  const match = await bcrypt.compare(account_password, accountData.account_password)
+
+  if (!match) {
+    return res.render("account/login", {
+      title: "Login",
+      nav,
+      errors: [{ msg: "Incorrect password. Please try again." }],
+      account_email
+    })
+  }
+
+  // If login is successful, generate JWT and redirect
+  delete accountData.account_password
+  const token = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" })
+
+  res.cookie("jwt", token, { httpOnly: true, maxAge: 3600000 })
+  res.redirect("/account") // or wherever you want to go
+}
+/* ****************************************
+ *  Build account View
+ * ************************************ */
+async function buildAccount(req, res) {
+  let nav = await utilities.getNav()
+  res.render("account/account", {
+    title: "Account Management",
+    nav,
+    errors: null,
+    message: req.flash("notice"),
+  })
+}
 
 module.exports = { 
   buildLogin,
   buildRegister,
-  registerAccount
+  registerAccount,
+  accountLogin,
+  buildAccount
 }
