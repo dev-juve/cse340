@@ -31,16 +31,15 @@ async function getInventoryByClassificationId(classification_id) {
  * ************************** */
 async function getInventoryById(inv_id) {
   try {
-    const result = await pool.query(
-      "SELECT * FROM inventory WHERE inv_id = $1",
-      [inv_id]
-    )
-    return result.rows[0] // Return a single object
+    const sql = 'SELECT * FROM inventory WHERE inv_id = $1'
+    const data = await pool.query(sql, [inv_id])
+    return data
   } catch (error) {
-    console.error("getInventoryById error:", error)
-    return null
+    console.error("getInventoryItemById error:", error)
+    throw error
   }
 }
+
 
 /* ***************************
  *  Insert New Inv Classification into the DB
@@ -134,11 +133,26 @@ async function updateInventory(
   }
 }
 
+/* ***************************
+ *  Delete Inventory Item
+ * ************************** */
+async function deleteInventoryItem(inv_id) {
+  try {
+    const sql = 'DELETE FROM inventory WHERE inv_id = $1'
+    const data = await pool.query(sql, [inv_id])
+    return data
+  } catch (error) {
+    throw new Error("Delete Inventory Error: " + error)
+  }
+}
+
+
 module.exports = {
   getClassifications,
   getInventoryByClassificationId,
   getInventoryById,
   addClassification,
   addInventory,
-  updateInventory
+  updateInventory,
+  deleteInventoryItem
 }
