@@ -1,10 +1,20 @@
   <h1>Inventory Management</h1>
-  
-  <% if (message) { %>
-    <div class="flash"><%= message %></div>
-  <% } %>
+
+  <% if (messages && messages.length > 0) { %>
+  <div class="flash"><%= messages[0] %></div>
+<% } %>
 
   <ul>
     <li><a href="/inv/add-classification">Add New Classification</a></li>
     <li><a href="/inv/add-inventory">Add New Inventory</a></li>
   </ul>
+  <h2>Manage Inventory</h2>
+<p>Select a classification to see those vehicles</p>
+<%- classificationSelect %>
+
+<table id="inventoryDisplay"></table>
+<noscript>JavaScript must be enabled to use this page.</noscript>
+
+<!-- Link the JS file -->
+<script src="/js/inventory.js"></script>
+

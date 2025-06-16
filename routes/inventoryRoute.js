@@ -43,6 +43,7 @@ router.get(
   "/add-classification",
   utilities.handleErrors(invController.buildAddClassification)
 )
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
 /* ***********************************
  * Process Add Classification form
@@ -71,5 +72,17 @@ router.post(
   invValidate.checkInventoryData,                
   utilities.handleErrors(invController.addInventory)
 )
+
+// Route to build the edit inventory view
+router.get("/edit/:inv_id", invController.editInventoryView);
+
+// Route to handle inventory update
+router.post(
+  "/update",
+  invValidate.newInventoryRules(),
+  invValidate.checkUpdateData,
+  invController.updateInventory
+)
+
 
 module.exports = router
