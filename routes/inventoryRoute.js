@@ -6,7 +6,7 @@ const invValidate = require("../utilities/inventory-validation")
 const utilities = require("../utilities")
 
 /* ***********************************
- * Route to build inventory by classification view
+ * Public: Inventory by classification view
  * *********************************** */
 router.get(
   "/type/:classificationId",
@@ -14,7 +14,7 @@ router.get(
 )
 
 /* ***********************************
- * Route to build inventory item details
+ * Public: Inventory item detail view
  * *********************************** */
 router.get(
   "/detail/:inv_id",
@@ -22,72 +22,114 @@ router.get(
 )
 
 /* ***********************************
- * Route to trigger a manual error (testing)
+ * Trigger error for testing
  * *********************************** */
 router.get("/trigger-error", (req, res) => {
   throw new Error("Intentional Server Error for Testing")
 })
 
 /* ***********************************
- * Management route
+ * Management route (Admin/Employee only)
  * *********************************** */
 router.get(
   "/",
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
   utilities.handleErrors(invController.buildManagement)
 )
 
 /* ***********************************
- * Add Classification form route
+ * Add Classification form (Admin/Employee only)
  * *********************************** */
 router.get(
   "/add-classification",
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
   utilities.handleErrors(invController.buildAddClassification)
 )
-router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
 /* ***********************************
- * Process Add Classification form
+ * Add Classification - Process form
  * *********************************** */
 router.post(
   "/add-classification",
-  invValidate.classificationRules(),            
-  invValidate.checkClassificationData,           
-  utilities.handleErrors(invController.addClassification) 
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
+  invValidate.classificationRules(),
+  invValidate.checkClassificationData,
+  utilities.handleErrors(invController.addClassification)
 )
 
 /* ***********************************
- * Add Inventory form route
+ * Add Inventory form (Admin/Employee only)
  * *********************************** */
 router.get(
   "/add-inventory",
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
   utilities.handleErrors(invController.buildAddInventory)
 )
 
 /* ***********************************
- * Process Add Inventory form
+ * Add Inventory - Process form
  * *********************************** */
 router.post(
   "/add-inventory",
-  invValidate.inventoryRules(),                 
-  invValidate.checkInventoryData,                
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
+  invValidate.inventoryRules(),
+  invValidate.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 )
 
-// Route to build the edit inventory view
-router.get("/edit/:inv_id", invController.editInventoryView);
-
-// Route to handle inventory update
-router.post(
-  "/update",
-  invValidate.newInventoryRules(),
-  invValidate.checkUpdateData,
-  invController.updateInventory
+/* ***********************************
+ * AJAX JSON endpoint (used publicly for dynamic dropdowns)
+ * *********************************** */
+router.get(
+  "/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
 )
 
-// GET: Confirm Delete View
-router.get("/delete/:inv_id", utilities.handleErrors(invController.buildDeleteView))
+/* ***********************************
+ * Edit Inventory view (Admin/Employee only)
+ * *********************************** */
+router.get(
+  "/edit/:inv_id",
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
+  utilities.handleErrors(invController.editInventoryView)
+)
 
-// POST: Perform Delete
-router.post("/delete", utilities.handleErrors(invController.deleteInventoryItem))
+/* ***********************************
+ * Update Inventory - Process form
+ * *********************************** */
+router.post(
+  "/update",
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
+  invValidate.newInventoryRules(),
+  invValidate.checkUpdateData,
+  utilities.handleErrors(invController.updateInventory)
+)
+
+/* ***********************************
+ * Confirm Delete view (Admin/Employee only)
+ * *********************************** */
+router.get(
+  "/delete/:inv_id",
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
+  utilities.handleErrors(invController.buildDeleteView)
+)
+
+/* ***********************************
+ * Perform Delete (Admin/Employee only)
+ * *********************************** */
+router.post(
+  "/delete",
+  utilities.checkJWTToken,
+  utilities.checkEmployeeOrAdmin,
+  utilities.handleErrors(invController.deleteInventoryItem)
+)
 
 module.exports = router

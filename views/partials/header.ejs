@@ -1,7 +1,16 @@
 <header id="top-header">
-    <h1><a href="/" title="Return to home page">CSE Motors</a></h1>
-    
-    <div id="tools">
+  <h1><a href="/" title="Return to home page">CSE Motors</a></h1>
+  
+  <div id="tools">
+    <% if (locals.accountData) { %>
+      <!-- Show Welcome link to account management -->
+      <a title="Go to account management" href="/account/">Welcome <%= accountData.account_firstname %></a>
+      
+      <!-- Show logout link -->
+      <a title="Click to logout" href="/account/logout">Logout</a>
+    <% } else { %>
+      <!-- Show My Account link only if not logged in -->
       <a title="Click to log in" href="/account/login">My Account</a>
-    </div>
-  </header>
+    <% } %>
+  </div>
+</header>

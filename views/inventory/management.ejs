@@ -1,20 +1,27 @@
-  <h1>Inventory Management</h1>
+<!-- Personalized Welcome -->
+<h2>Welcome <%= accountData.firstname %></h2>
 
-  <% if (messages && messages.length > 0) { %>
-  <div class="flash"><%= messages[0] %></div>
+<!-- Update Account Info Link -->
+<p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
+
+<!-- Inventory Management Section -->
+<h1>Inventory Management</h1>
+
+<% if (messages && messages.length > 0) { %>
+<ul><li class="flash"><%= messages[0] %></li></ul>
 <% } %>
 
-  <ul>
-    <li><a href="/inv/add-classification">Add New Classification</a></li>
-    <li><a href="/inv/add-inventory">Add New Inventory</a></li>
-  </ul>
-  <h2>Manage Inventory</h2>
+<ul>
+<li><a href="/inv/add-classification">Add New Classification</a></li>
+<li><a href="/inv/add-inventory">Add New Inventory</a></li>
+</ul>
+
+<h2>Manage Inventory</h2>
 <p>Select a classification to see those vehicles</p>
+
 <%- classificationSelect %>
 
 <table id="inventoryDisplay"></table>
 <noscript>JavaScript must be enabled to use this page.</noscript>
 
-<!-- Link the JS file -->
 <script src="/js/inventory.js"></script>
-

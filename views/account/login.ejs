@@ -8,6 +8,9 @@
     <% }) %>
   </ul>
 <% } %>
+<% if (messages && messages.length > 0) { %>
+<ul><li class="flash"><%= messages[0] %></li></ul>
+<% } %>
 
 
   <form id="loginForm" method="post" action="/account/login" class="login-form">

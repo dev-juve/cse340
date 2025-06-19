@@ -29,4 +29,38 @@ router.post(
 // Account management view
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccount))
 
+/* ================================
+ * GET: Account Update View
+ * ================================ */
+router.get(
+  "/update/:account_id",
+  utilities.checkJWTToken,
+  utilities.handleErrors(accountController.buildAccountUpdateView)
+)
+
+/* ================================
+ * POST: Update Account Info
+ * ================================ */
+router.post(
+  "/update-account",
+  utilities.checkJWTToken,
+  regValidate.accountUpdateRules(),
+  regValidate.checkAccountUpdate,
+  utilities.handleErrors(accountController.updateAccount)
+)
+
+/* ================================
+ * POST: Update Password
+ * ================================ */
+router.post(
+  "/update-password",
+  utilities.checkJWTToken,
+  regValidate.passwordUpdateRules(),
+  regValidate.checkPasswordUpdate,
+  utilities.handleErrors(accountController.updatePassword)
+)
+
+// GET: Logout
+router.get("/logout", accountController.logout)
+
 module.exports = router

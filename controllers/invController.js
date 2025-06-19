@@ -22,8 +22,34 @@ async function buildByClassificationId(req, res, next) {
 /* ***************************
  *  Build inventory item detail view
  * ************************** */
+// async function buildByInvId(req, res, next) {
+//   const inv_id = req.params.inv_id
+//   const vehicle = await invModel.getInventoryById(inv_id)
+//   const nav = await utilities.getNav()
+
+//   if (!vehicle) {
+//     return res.status(404).send("Vehicle not found")
+//   }
+//   const html = await utilities.buildVehicleDetail(vehicle)
+
+//   res.render("./inventory/vehicleDetails", {
+//     title: `${vehicle.inv_make} ${vehicle.inv_model}`,
+//    nav,
+//     html,
+//  })
+//  if(vehicle) {
+//   return inv_id
+//  }
+// }
+
 async function buildByInvId(req, res, next) {
-  const inv_id = req.params.inv_id
+  const inv_id = parseInt(req.params.inv_id)
+
+  if (isNaN(inv_id)) {
+    req.flash("notice", "Invalid vehicle ID.")
+    return res.redirect("/inv")
+  }
+
   const vehicle = await invModel.getInventoryById(inv_id)
   const nav = await utilities.getNav()
 
@@ -39,6 +65,7 @@ async function buildByInvId(req, res, next) {
     html,
   })
 }
+
 
 async function buildManagement(req, res, next) {
   let nav = await utilities.getNav()
@@ -333,5 +360,5 @@ module.exports = {
   editInventoryView,
   updateInventory,
   buildDeleteView,
-  deleteInventoryItem
+  deleteInventoryItem,
 }

@@ -1,0 +1,76 @@
+<h1>Edit Account</h1>
+
+<!-- Flash Messages -->
+<% if (errors && errors.length > 0) { %>
+  <div class="flash error">
+    <ul>
+      <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<% if (messages && messages.length > 0) { %>
+<ul><li class="flash"><%= messages[0] %></li></ul>
+<% } %>
+
+
+
+<!-- Account Info Update Form -->
+<section>
+  <h2>Update Account Information</h2>
+  <form action="/account/update-account" method="post" class="register-form">
+    <label for="account_firstname">First Name</label>
+    <input 
+      type="text" 
+      id="account_firstname" 
+      name="account_firstname" 
+      required 
+      value="<%= account_firstname %>"
+    >
+
+    <label for="account_lastname">Last Name</label>
+    <input 
+      type="text" 
+      id="account_lastname" 
+      name="account_lastname" 
+      required 
+      value="<%= account_lastname %>"
+    >
+
+    <label for="account_email">Email</label>
+    <input 
+      type="email" 
+      id="account_email" 
+      name="account_email" 
+      required 
+      value="<%= account_email %>"
+    >
+
+    <input type="hidden" name="account_id" value="<%= account_id %>">
+
+    <button type="submit" class="btn">Update Account</button>
+  </form>
+</section>
+
+<!-- Password Change Form -->
+<section>
+  <h2>Change Password</h2>
+  <p>Password must be at least 12 characters and contain a number, uppercase letter, lowercase letter, and special character.</p>
+  <form action="/account/update-password" method="post" class="register-form">
+    <label for="account_password">New Password</label>
+    <input 
+      type="password" 
+      id="account_password" 
+      name="account_password" 
+      required 
+      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$"
+      title="Password must be at least 12 characters and include uppercase, lowercase, number, and special character."
+    >
+
+    <input type="hidden" name="account_id" value="<%= account_id %>">
+
+    <button type="submit" class="btn">Change Password</button>
+  </form>
+</section>
