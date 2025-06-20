@@ -1,8 +1,9 @@
+<section class="account-dashboard">
 <!-- Personalized Welcome -->
 <h2>Welcome <%= accountData.firstname %></h2>
 
 <!-- Update Account Info Link -->
-<p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
+<p><a href="/account/update/<%= accountData.account_id %>" class="btn-link">Update Account Information</a></p>
 
 <!-- Inventory Management Section -->
 <h1>Inventory Management</h1>
@@ -11,7 +12,7 @@
 <ul><li class="flash"><%= messages[0] %></li></ul>
 <% } %>
 
-<ul>
+<ul class="inventory-links">
 <li><a href="/inv/add-classification">Add New Classification</a></li>
 <li><a href="/inv/add-inventory">Add New Inventory</a></li>
 </ul>
@@ -21,7 +22,9 @@
 
 <%- classificationSelect %>
 
-<table id="inventoryDisplay"></table>
+<div class="inventory-wrapper">
+  <table id="inventoryDisplay"></table>
+</div>
 <noscript>JavaScript must be enabled to use this page.</noscript>
-
+</section>
 <script src="/js/inventory.js"></script>

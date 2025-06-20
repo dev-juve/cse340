@@ -1,6 +1,7 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities")
-
+const reviewModel = require("../models/review-model")
+const { body, validationResult } = require("express-validator")
 /* ***************************
  *  Build inventory by classification view
  * ************************** */
@@ -22,28 +23,9 @@ async function buildByClassificationId(req, res, next) {
 /* ***************************
  *  Build inventory item detail view
  * ************************** */
-// async function buildByInvId(req, res, next) {
-//   const inv_id = req.params.inv_id
-//   const vehicle = await invModel.getInventoryById(inv_id)
-//   const nav = await utilities.getNav()
-
-//   if (!vehicle) {
-//     return res.status(404).send("Vehicle not found")
-//   }
-//   const html = await utilities.buildVehicleDetail(vehicle)
-
-//   res.render("./inventory/vehicleDetails", {
-//     title: `${vehicle.inv_make} ${vehicle.inv_model}`,
-//    nav,
-//     html,
-//  })
-//  if(vehicle) {
-//   return inv_id
-//  }
-// }
-
 async function buildByInvId(req, res, next) {
   const inv_id = parseInt(req.params.inv_id)
+  const errors = validationResult(req)
 
   if (isNaN(inv_id)) {
     req.flash("notice", "Invalid vehicle ID.")
@@ -59,11 +41,19 @@ async function buildByInvId(req, res, next) {
 
   const html = await utilities.buildVehicleDetail(vehicle)
 
+  // Inventory Review Logics
+  const reviews = await reviewModel.getReviewsByInvId(inv_id)
   res.render("./inventory/vehicleDetails", {
     title: `${vehicle.inv_make} ${vehicle.inv_model}`,
     nav,
     html,
+    vehicle,
+    reviews,
+    loggedin: res.locals.loggedin || false,
+    accountData: res.locals.accountData || {},
+    errors
   })
+
 }
 
 

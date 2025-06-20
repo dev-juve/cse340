@@ -1,2 +1,40 @@
 <h1><%= title %></h1>
 <%- html %>
+<% if (messages && messages.length > 0) { %>
+<ul><li class="flash"><%= messages[0] %></li></ul>
+<% } %>
+<section>
+  <h2>Customer Reviews</h2>
+  <% if (reviews && reviews.length > 0) { %>
+    <ul>
+      <% reviews.forEach(r => { %>
+        <li>
+          <strong><%= r.account_firstname %>:</strong> <%= r.review_text %> <em>(<%= new Date(r.review_date).toLocaleDateString() %>)</em>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No reviews yet. Be the first to write one!</p>
+  <% } %>
+</section>
+<% if (errors && errors.length > 0) { %>
+  <div class="flash error">
+    <ul>
+      <% errors.forEach(err => { %>
+        <li><%= err.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<% if (loggedin) { %>
+  <form action="/inv/add-review" method="POST">
+    <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+    <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+    <label for="review_text">Write a Review:</label><br>
+    <textarea name="review_text" id="review_text" rows="4" required></textarea><br>
+    <button type="submit" class="btn">Submit Review</button>
+  </form>
+<% } else { %>
+  <p><a href="/account/login" class="btn-link">Log in</a> to leave a review.</p>
+<% } %>

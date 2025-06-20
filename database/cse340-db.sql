@@ -257,3 +257,12 @@ WHERE inv_id = 10;
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
+
+
+CREATE TABLE review (
+  review_id SERIAL PRIMARY KEY,
+  review_text TEXT NOT NULL,
+  review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  inv_id INT REFERENCES inventory(inv_id),
+  account_id INT REFERENCES account(account_id)
+);

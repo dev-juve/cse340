@@ -4,7 +4,8 @@ const router = express.Router()
 const invController = require("../controllers/invController")
 const invValidate = require("../utilities/inventory-validation")
 const utilities = require("../utilities")
-
+const reviewController = require("../controllers/reviewController")
+const reviewValidate = require("../utilities/review-validation")
 /* ***********************************
  * Public: Inventory by classification view
  * *********************************** */
@@ -131,5 +132,10 @@ router.post(
   utilities.checkEmployeeOrAdmin,
   utilities.handleErrors(invController.deleteInventoryItem)
 )
+/* ***********************************
+ * Add review route
+ * *********************************** */
+router.post("/add-review", utilities.checkJWTToken, reviewValidate.reviewRules(),
+  reviewValidate.checkReviewData, reviewController.addReview)
 
 module.exports = router
